@@ -360,6 +360,14 @@ const GuitarFretboard = () => {
   const numFrets = 15;
   const noteNames = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
 
+  // Calculate current scale root note based on transposition
+  const getScaleRootNote = () => {
+    // E is at index 4 in the chromatic scale
+    const eIndex = 4;
+    const currentIndex = (eIndex + scaleTranspose + 12) % 12; // +12 to handle negative numbers
+    return noteNames[currentIndex];
+  };
+
   // Convert MIDI note to note name with octave
   const midiToNoteName = (midi) => {
     const octave = Math.floor(midi / 12) - 1;
@@ -576,7 +584,7 @@ const GuitarFretboard = () => {
         {/* Pentatonic Scale Selector */}
         <div className="mt-6 bg-slate-800/50 rounded-lg p-4 backdrop-blur">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-white">E Minor Pentatonic Scale</h3>
+            <h3 className="text-lg font-semibold text-white">{getScaleRootNote()} Minor Pentatonic Scale</h3>
             <div className="flex items-center gap-3">
               {/* Reset transpose button */}
               <button
