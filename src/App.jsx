@@ -446,7 +446,11 @@ const GuitarFretboard = () => {
       const chordFret = chord.position.frets[5 - stringIndex];
       // Only highlight chord notes if the string is not muted
       if (chordFret !== -1 && chordFret === fret) {
-        return { highlighted: true, type: 'chord' };
+        return { 
+          highlighted: true, 
+          type: 'chord',
+          finger: chord.position.fingers[5 - stringIndex]
+        };
       }
     }
     
@@ -626,7 +630,7 @@ const GuitarFretboard = () => {
                           onClick={() => playNote(midi, stringIndex, fret)}
                           className={`
                             m-1 px-1 py-1.5 rounded-md text-xs font-mono font-semibold
-                            transition-all duration-200 w-full max-w-[44px]
+                            transition-all duration-200 w-full max-w-[44px] relative
                             ${isPlaying 
                               ? 'bg-blue-500 text-white scale-110 shadow-lg shadow-blue-500/50' 
                               : highlight.highlighted && highlight.type === 'chord'
@@ -638,6 +642,16 @@ const GuitarFretboard = () => {
                           `}
                         >
                           {noteName}
+                          
+                          {/* Finger number indicator for chord notes */}
+                          {highlight.highlighted && highlight.type === 'chord' && highlight.finger > 0 && (
+                            <div 
+                              className="absolute top-1/2 -right-2 transform -translate-y-1/2 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center border-2 border-slate-900 z-10"
+                              style={{ fontSize: '10px', fontWeight: 'bold', color: '#000' }}
+                            >
+                              {highlight.finger}
+                            </div>
+                          )}
                         </button>
                         
                         {/* Fret line */}
