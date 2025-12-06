@@ -49,16 +49,16 @@ const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, isSele
       <div className="text-xs text-slate-400 mb-3">{chord.fullName}</div>
       
       {/* Mini fretboard diagram */}
-      <div className="bg-slate-800 rounded p-2 mb-3">
-        <svg viewBox="0 0 60 80" className="w-full h-20">
+      <div className="bg-slate-800 rounded p-1 mb-3">
+        <svg viewBox="0 -2 55 67" className="w-full h-24">
           {/* Strings (vertical lines) */}
           {[0, 1, 2, 3, 4, 5].map((string) => (
             <line
               key={`string-${string}`}
-              x1={10 + string * 10}
-              y1={10}
-              x2={10 + string * 10}
-              y2={70}
+              x1={5 + string * 9}
+              y1={5}
+              x2={5 + string * 9}
+              y2={60}
               stroke="#64748b"
               strokeWidth="0.5"
             />
@@ -68,10 +68,10 @@ const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, isSele
           {[0, 1, 2, 3, 4, 5].map((fret) => (
             <line
               key={`fret-${fret}`}
-              x1={10}
-              y1={10 + fret * 12}
-              x2={60}
-              y2={10 + fret * 12}
+              x1={5}
+              y1={5 + fret * 11}
+              x2={50}
+              y2={5 + fret * 11}
               stroke="#64748b"
               strokeWidth={fret === 0 ? "2" : "0.5"}
             />
@@ -84,9 +84,9 @@ const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, isSele
               return (
                 <text
                   key={`mute-${stringIndex}`}
-                  x={10 + stringIndex * 10}
-                  y={6}
-                  fontSize="6"
+                  x={5 + stringIndex * 9}
+                  y={3}
+                  fontSize="4.5"
                   fill="#ef4444"
                   textAnchor="middle"
                   fontWeight="bold"
@@ -95,16 +95,16 @@ const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, isSele
                 </text>
               );
             } else if (fret === 0) {
-              // Open string - O above nut
+              // Open string - O above nut  
               return (
                 <circle
                   key={`open-${stringIndex}`}
-                  cx={10 + stringIndex * 10}
-                  cy={4}
-                  r={2}
+                  cx={5 + stringIndex * 9}
+                  cy={1.5}
+                  r={1.5}
                   fill="none"
                   stroke="#10b981"
-                  strokeWidth="1"
+                  strokeWidth="0.8"
                 />
               );
             } else {
@@ -115,14 +115,14 @@ const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, isSele
               return (
                 <g key={`fret-${stringIndex}`}>
                   <circle
-                    cx={10 + stringIndex * 10}
-                    cy={10 + adjustedFret * 12 - 6}
+                    cx={5 + stringIndex * 9}
+                    cy={5 + adjustedFret * 11 - 5.5}
                     r={3}
                     fill="#fbbf24"
                   />
                   <text
-                    x={10 + stringIndex * 10}
-                    y={10 + adjustedFret * 12 - 5}
+                    x={5 + stringIndex * 9}
+                    y={5 + adjustedFret * 11 - 4.5}
                     fontSize="5"
                     fill="#000"
                     textAnchor="middle"
@@ -138,8 +138,8 @@ const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, isSele
           {/* Base fret indicator if not at nut */}
           {position.baseFret > 0 && (
             <text
-              x={3}
-              y={16}
+              x={1}
+              y={11}
               fontSize="5"
               fill="#94a3b8"
               fontWeight="bold"
@@ -191,6 +191,48 @@ const GuitarFretboard = () => {
   // Format: frets array [string 6 to 1], -1 = muted, 0 = open
   // fingers array: finger to use (0 = open/muted, 1-4 = fingers)
   const chordDatabase = [
+    // A chords
+    { name: 'A', fullName: 'A Major', positions: [
+      { frets: [-1, 0, 2, 2, 2, 0], fingers: [0, 0, 1, 2, 3, 0], baseFret: 0 },
+      { frets: [5, 7, 7, 6, 5, 5], fingers: [1, 3, 4, 2, 1, 1], baseFret: 5 },
+      { frets: [12, 12, 14, 14, 14, 12], fingers: [1, 1, 3, 3, 3, 1], baseFret: 12 }
+    ]},
+    { name: 'Am', fullName: 'A Minor', positions: [
+      { frets: [-1, 0, 2, 2, 1, 0], fingers: [0, 0, 2, 3, 1, 0], baseFret: 0 },
+      { frets: [5, 7, 7, 5, 5, 5], fingers: [1, 3, 4, 1, 1, 1], baseFret: 5 },
+      { frets: [12, 12, 14, 14, 13, 12], fingers: [1, 1, 3, 4, 2, 1], baseFret: 12 }
+    ]},
+    { name: 'A7', fullName: 'A Dominant 7', positions: [
+      { frets: [-1, 0, 2, 0, 2, 0], fingers: [0, 0, 2, 0, 3, 0], baseFret: 0 },
+      { frets: [5, 7, 5, 6, 5, 5], fingers: [1, 3, 1, 2, 1, 1], baseFret: 5 }
+    ]},
+    { name: 'Amaj7', fullName: 'A Major 7', positions: [
+      { frets: [-1, 0, 2, 1, 2, 0], fingers: [0, 0, 2, 1, 3, 0], baseFret: 0 }
+    ]},
+    { name: 'Am7', fullName: 'A Minor 7', positions: [
+      { frets: [-1, 0, 2, 0, 1, 0], fingers: [0, 0, 2, 0, 1, 0], baseFret: 0 }
+    ]},
+    { name: 'Asus2', fullName: 'A Suspended 2', positions: [
+      { frets: [-1, 0, 2, 2, 0, 0], fingers: [0, 0, 1, 2, 0, 0], baseFret: 0 }
+    ]},
+    { name: 'Asus4', fullName: 'A Suspended 4', positions: [
+      { frets: [-1, 0, 2, 2, 3, 0], fingers: [0, 0, 1, 2, 3, 0], baseFret: 0 }
+    ]},
+
+    // B chords
+    { name: 'B', fullName: 'B Major', positions: [
+      { frets: [-1, 2, 4, 4, 4, 2], fingers: [0, 1, 3, 3, 3, 1], baseFret: 2 },
+      { frets: [7, 9, 9, 8, 7, 7], fingers: [1, 3, 4, 2, 1, 1], baseFret: 7 }
+    ]},
+    { name: 'Bm', fullName: 'B Minor', positions: [
+      { frets: [-1, 2, 4, 4, 3, 2], fingers: [0, 1, 3, 4, 2, 1], baseFret: 2 },
+      { frets: [7, 9, 9, 7, 7, 7], fingers: [1, 3, 4, 1, 1, 1], baseFret: 7 }
+    ]},
+    { name: 'B7', fullName: 'B Dominant 7', positions: [
+      { frets: [-1, 2, 1, 2, 0, 2], fingers: [0, 2, 1, 3, 0, 4], baseFret: 0 },
+      { frets: [7, 9, 7, 8, 7, 7], fingers: [1, 3, 1, 2, 1, 1], baseFret: 7 }
+    ]},
+    
     // C chords
     { name: 'C', fullName: 'C Major', positions: [
       { frets: [-1, 3, 2, 0, 1, 0], fingers: [0, 3, 2, 0, 1, 0], baseFret: 0 },
@@ -225,6 +267,18 @@ const GuitarFretboard = () => {
       { frets: [-1, -1, 0, 2, 1, 2], fingers: [0, 0, 0, 2, 1, 3], baseFret: 0 },
       { frets: [10, 12, 10, 11, 10, 10], fingers: [1, 3, 1, 2, 1, 1], baseFret: 10 }
     ]},
+    { name: 'Dmaj7', fullName: 'D Major 7', positions: [
+      { frets: [-1, -1, 0, 2, 2, 2], fingers: [0, 0, 0, 1, 1, 1], baseFret: 0 }
+    ]},
+    { name: 'Dm7', fullName: 'D Minor 7', positions: [
+      { frets: [-1, -1, 0, 2, 1, 1], fingers: [0, 0, 0, 2, 1, 1], baseFret: 0 }
+    ]},
+    { name: 'Dsus2', fullName: 'D Suspended 2', positions: [
+      { frets: [-1, -1, 0, 2, 3, 0], fingers: [0, 0, 0, 1, 2, 0], baseFret: 0 }
+    ]},
+    { name: 'Dsus4', fullName: 'D Suspended 4', positions: [
+      { frets: [-1, -1, 0, 2, 3, 3], fingers: [0, 0, 0, 1, 3, 4], baseFret: 0 }
+    ]},
 
     // E chords
     { name: 'E', fullName: 'E Major', positions: [
@@ -241,6 +295,35 @@ const GuitarFretboard = () => {
       { frets: [0, 2, 0, 1, 0, 0], fingers: [0, 2, 0, 1, 0, 0], baseFret: 0 },
       { frets: [12, 14, 12, 13, 12, 12], fingers: [1, 3, 1, 2, 1, 1], baseFret: 12 }
     ]},
+    { name: 'Emaj7', fullName: 'E Major 7', positions: [
+      { frets: [0, 2, 1, 1, 0, 0], fingers: [0, 3, 1, 2, 0, 0], baseFret: 0 }
+    ]},
+    { name: 'Em7', fullName: 'E Minor 7', positions: [
+      { frets: [0, 2, 0, 0, 0, 0], fingers: [0, 2, 0, 0, 0, 0], baseFret: 0 }
+    ]},
+    { name: 'Esus4', fullName: 'E Suspended 4', positions: [
+      { frets: [0, 2, 2, 2, 0, 0], fingers: [0, 1, 2, 3, 0, 0], baseFret: 0 }
+    ]},
+
+    // F chords
+    { name: 'F', fullName: 'F Major', positions: [
+      { frets: [-1, -1, 3, 2, 1, 1], fingers: [0, 0, 3, 2, 1, 1], baseFret: 0 }, // Open F
+      { frets: [1, 3, 3, 2, 1, 1], fingers: [1, 3, 4, 2, 1, 1], baseFret: 1 },
+      { frets: [8, 8, 10, 10, 10, 8], fingers: [1, 1, 3, 3, 3, 1], baseFret: 8 }
+    ]},
+    { name: 'Fm', fullName: 'F Minor', positions: [
+      { frets: [1, 3, 3, 1, 1, 1], fingers: [1, 3, 4, 1, 1, 1], baseFret: 1 },
+      { frets: [8, 10, 10, 8, 8, 8], fingers: [1, 3, 4, 1, 1, 1], baseFret: 8 }
+    ]},
+    { name: 'F7', fullName: 'F Dominant 7', positions: [
+      { frets: [-1, -1, 3, 2, 1, 0], fingers: [0, 0, 3, 2, 1, 0], baseFret: 0 }, // Open F7
+      { frets: [1, 3, 1, 2, 1, 1], fingers: [1, 3, 1, 2, 1, 1], baseFret: 1 },
+      { frets: [8, 10, 8, 9, 8, 8], fingers: [1, 3, 1, 2, 1, 1], baseFret: 8 }
+    ]},
+    { name: 'Fmaj7', fullName: 'F Major 7', positions: [
+      { frets: [-1, -1, 3, 2, 1, 0], fingers: [0, 0, 3, 2, 1, 0], baseFret: 0 },
+      { frets: [1, 3, 2, 2, 1, 1], fingers: [1, 4, 2, 3, 1, 1], baseFret: 1 }
+    ]},
 
     // G chords
     { name: 'G', fullName: 'G Major', positions: [
@@ -256,49 +339,11 @@ const GuitarFretboard = () => {
       { frets: [3, 2, 0, 0, 0, 1], fingers: [3, 2, 0, 0, 0, 1], baseFret: 0 },
       { frets: [3, 5, 3, 4, 3, 3], fingers: [1, 3, 1, 2, 1, 1], baseFret: 3 }
     ]},
-
-    // A chords
-    { name: 'A', fullName: 'A Major', positions: [
-      { frets: [-1, 0, 2, 2, 2, 0], fingers: [0, 0, 1, 2, 3, 0], baseFret: 0 },
-      { frets: [5, 7, 7, 6, 5, 5], fingers: [1, 3, 4, 2, 1, 1], baseFret: 5 },
-      { frets: [12, 12, 14, 14, 14, 12], fingers: [1, 1, 3, 3, 3, 1], baseFret: 12 }
+    { name: 'Gmaj7', fullName: 'G Major 7', positions: [
+      { frets: [3, 2, 0, 0, 0, 2], fingers: [3, 2, 0, 0, 0, 1], baseFret: 0 }
     ]},
-    { name: 'Am', fullName: 'A Minor', positions: [
-      { frets: [-1, 0, 2, 2, 1, 0], fingers: [0, 0, 2, 3, 1, 0], baseFret: 0 },
-      { frets: [5, 7, 7, 5, 5, 5], fingers: [1, 3, 4, 1, 1, 1], baseFret: 5 },
-      { frets: [12, 12, 14, 14, 13, 12], fingers: [1, 1, 3, 4, 2, 1], baseFret: 12 }
-    ]},
-    { name: 'A7', fullName: 'A Dominant 7', positions: [
-      { frets: [-1, 0, 2, 0, 2, 0], fingers: [0, 0, 2, 0, 3, 0], baseFret: 0 },
-      { frets: [5, 7, 5, 6, 5, 5], fingers: [1, 3, 1, 2, 1, 1], baseFret: 5 }
-    ]},
-
-    // F chords
-    { name: 'F', fullName: 'F Major', positions: [
-      { frets: [1, 3, 3, 2, 1, 1], fingers: [1, 3, 4, 2, 1, 1], baseFret: 1 },
-      { frets: [8, 8, 10, 10, 10, 8], fingers: [1, 1, 3, 3, 3, 1], baseFret: 8 }
-    ]},
-    { name: 'Fm', fullName: 'F Minor', positions: [
-      { frets: [1, 3, 3, 1, 1, 1], fingers: [1, 3, 4, 1, 1, 1], baseFret: 1 },
-      { frets: [8, 10, 10, 8, 8, 8], fingers: [1, 3, 4, 1, 1, 1], baseFret: 8 }
-    ]},
-    { name: 'F7', fullName: 'F Dominant 7', positions: [
-      { frets: [1, 3, 1, 2, 1, 1], fingers: [1, 3, 1, 2, 1, 1], baseFret: 1 },
-      { frets: [8, 10, 8, 9, 8, 8], fingers: [1, 3, 1, 2, 1, 1], baseFret: 8 }
-    ]},
-
-    // B chords
-    { name: 'B', fullName: 'B Major', positions: [
-      { frets: [-1, 2, 4, 4, 4, 2], fingers: [0, 1, 3, 3, 3, 1], baseFret: 2 },
-      { frets: [7, 9, 9, 8, 7, 7], fingers: [1, 3, 4, 2, 1, 1], baseFret: 7 }
-    ]},
-    { name: 'Bm', fullName: 'B Minor', positions: [
-      { frets: [-1, 2, 4, 4, 3, 2], fingers: [0, 1, 3, 4, 2, 1], baseFret: 2 },
-      { frets: [7, 9, 9, 7, 7, 7], fingers: [1, 3, 4, 1, 1, 1], baseFret: 7 }
-    ]},
-    { name: 'B7', fullName: 'B Dominant 7', positions: [
-      { frets: [-1, 2, 1, 2, 0, 2], fingers: [0, 2, 1, 3, 0, 4], baseFret: 0 },
-      { frets: [7, 9, 7, 8, 7, 7], fingers: [1, 3, 1, 2, 1, 1], baseFret: 7 }
+    { name: 'Gsus4', fullName: 'G Suspended 4', positions: [
+      { frets: [3, 3, 0, 0, 1, 3], fingers: [3, 4, 0, 0, 1, 2], baseFret: 0 }
     ]}
   ];
 
@@ -510,11 +555,24 @@ const GuitarFretboard = () => {
           <div className="flex mb-2">
             <div className="w-32 flex-shrink-0"></div>
             <div className="flex flex-1 justify-around px-1">
-              {Array.from({ length: numFrets + 1 }, (_, i) => (
-                <div key={i} className="flex-1 text-center">
-                  <span className="text-slate-400 text-sm font-semibold">{i}</span>
-                </div>
-              ))}
+              {Array.from({ length: numFrets + 1 }, (_, i) => {
+                const isMarkerFret = [3, 5, 7, 9, 15].includes(i);
+                const isDoubleDot = i === 12;
+                return (
+                  <div key={i} className="flex-1 text-center relative">
+                    {isMarkerFret && (
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-2 w-2 h-2 bg-slate-400 rounded-full opacity-50"></div>
+                    )}
+                    {isDoubleDot && (
+                      <>
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-2 -ml-2 w-2 h-2 bg-slate-400 rounded-full opacity-50"></div>
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-2 ml-2 w-2 h-2 bg-slate-400 rounded-full opacity-50"></div>
+                      </>
+                    )}
+                    <span className="text-slate-400 text-sm font-semibold">{i}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -535,7 +593,6 @@ const GuitarFretboard = () => {
                     const midi = openStringMIDI[5 - stringIndex] + fret;
                     const noteName = midiToNoteName(midi);
                     const isPlaying = playingNote === `${stringIndex}-${fret}`;
-                    const isMarkerFret = [3, 5, 7, 9, 12, 15].includes(fret);
                     const highlight = isHighlighted(stringIndex, fret);
 
                     return (
@@ -543,11 +600,6 @@ const GuitarFretboard = () => {
                         key={fret}
                         className="flex-1 flex items-center justify-center relative group"
                       >
-                        {/* Fret marker dots */}
-                        {stringIndex === 3 && isMarkerFret && (
-                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-slate-600/40 rounded-full"></div>
-                        )}
-                        
                         {/* Note button */}
                         <button
                           onClick={() => playNote(midi, stringIndex, fret)}
