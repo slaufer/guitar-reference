@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Search, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Chord Thumbnail Component
-const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, isSelected }) => {
+const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, onOpenModal, isSelected }) => {
   const [selectedPosition, setSelectedPosition] = useState(0);
   
   const position = chord.positions[selectedPosition];
@@ -49,7 +49,14 @@ const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, isSele
       <div className="text-xs text-slate-400 mb-3">{chord.fullName}</div>
       
       {/* Mini fretboard diagram */}
-      <div className="bg-slate-800 rounded p-1 mb-3">
+      <div 
+        className="bg-slate-800 rounded p-1 mb-3 cursor-pointer hover:bg-slate-700 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpenModal({ chord, position, positionIndex: selectedPosition });
+        }}
+        title="Click to enlarge"
+      >
         <svg viewBox="0 -2 55 67" className="w-full h-24">
           {/* Strings (vertical lines) */}
           {[0, 1, 2, 3, 4, 5].map((string) => (
@@ -181,6 +188,7 @@ const GuitarFretboard = () => {
   const [selectedScale, setSelectedScale] = useState([]); // Array of selected positions
   const [scaleTranspose, setScaleTranspose] = useState(0); // Semitones to shift scale
   const [searchTerm, setSearchTerm] = useState('');
+  const [modalChord, setModalChord] = useState(null); // For enlarged chord modal
 
   // Standard tuning - MIDI note numbers for open strings (low to high)
   const openStringMIDI = [40, 45, 50, 55, 59, 64]; // E2, A2, D3, G3, B3, E4
@@ -553,13 +561,13 @@ const GuitarFretboard = () => {
         <div className="bg-slate-800/50 rounded-lg p-6 backdrop-blur">
           {/* Fret numbers */}
           <div className="flex mb-2">
-            <div className="w-32 flex-shrink-0"></div>
-            <div className="flex flex-1 justify-around px-1">
+            <div className="w-20 flex-shrink-0 pr-4"></div>
+            <div className="flex-1 grid" style={{ gridTemplateColumns: `repeat(${numFrets + 1}, 1fr)` }}>
               {Array.from({ length: numFrets + 1 }, (_, i) => {
                 const isMarkerFret = [3, 5, 7, 9, 15].includes(i);
                 const isDoubleDot = i === 12;
                 return (
-                  <div key={i} className="flex-1 text-center relative">
+                  <div key={i} className="text-center relative flex items-center justify-center">
                     {isMarkerFret && (
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-2 w-2 h-2 bg-slate-400 rounded-full opacity-50"></div>
                     )}
@@ -569,7 +577,20 @@ const GuitarFretboard = () => {
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-2 ml-2 w-2 h-2 bg-slate-400 rounded-full opacity-50"></div>
                       </>
                     )}
-                    <span className="text-slate-400 text-sm font-semibold">{i}</span>
+                    {i === 0 ? (
+                      <svg width="14" height="14" className="inline-block">
+                        <circle
+                          cx="7"
+                          cy="7"
+                          r="5"
+                          fill="none"
+                          stroke="#10b981"
+                          strokeWidth="1.5"
+                        />
+                      </svg>
+                    ) : (
+                      <span className="text-slate-400 text-sm font-semibold">{i}</span>
+                    )}
                   </div>
                 );
               })}
@@ -581,14 +602,14 @@ const GuitarFretboard = () => {
             {openStringMIDI.map((openMIDI, stringIndex) => (
               <div key={stringIndex} className="flex items-center">
                 {/* String label */}
-                <div className="w-32 flex-shrink-0 pr-4 text-right">
+                <div className="w-20 flex-shrink-0 pr-4 text-left">
                   <span className="text-white font-semibold text-sm">
                     {stringLabels[5 - stringIndex]}
                   </span>
                 </div>
 
                 {/* Frets */}
-                <div className={`flex flex-1 border-t-2 border-slate-600 relative ${stringIndex === 5 ? 'border-b-2' : ''}`}>
+                <div className={`flex-1 grid border-t-2 border-slate-600 relative ${stringIndex === 5 ? 'border-b-2' : ''}`} style={{ gridTemplateColumns: `repeat(${numFrets + 1}, 1fr)` }}>
                   {Array.from({ length: numFrets + 1 }, (_, fret) => {
                     const midi = openStringMIDI[5 - stringIndex] + fret;
                     const noteName = midiToNoteName(midi);
@@ -598,14 +619,14 @@ const GuitarFretboard = () => {
                     return (
                       <div
                         key={fret}
-                        className="flex-1 flex items-center justify-center relative group"
+                        className="flex items-center justify-center relative"
                       >
                         {/* Note button */}
                         <button
                           onClick={() => playNote(midi, stringIndex, fret)}
                           className={`
                             m-1 px-1 py-1.5 rounded-md text-xs font-mono font-semibold
-                            transition-all duration-200 flex-1 max-w-[44px]
+                            transition-all duration-200 w-full max-w-[44px]
                             ${isPlaying 
                               ? 'bg-blue-500 text-white scale-110 shadow-lg shadow-blue-500/50' 
                               : highlight.highlighted && highlight.type === 'chord'
@@ -748,6 +769,7 @@ const GuitarFretboard = () => {
                   setSelectedScale([]); // Clear all selected scales when chord is selected
                 }}
                 onPlayChord={(position) => playChord(position)}
+                onOpenModal={(chordData) => setModalChord(chordData)}
                 isSelected={selectedChord?.chord.name === chord.name}
               />
             ))}
@@ -760,6 +782,136 @@ const GuitarFretboard = () => {
           )}
         </div>
       </div>
+      
+      {/* Chord Modal - rendered at root level for proper viewport coverage */}
+      {modalChord && (
+        <div 
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-[9999]"
+          onClick={() => setModalChord(null)}
+        >
+          <div 
+            className="bg-slate-800 rounded-lg p-6 max-w-md w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-white font-bold text-2xl">{modalChord.chord.name}</h3>
+                <p className="text-slate-400 text-sm">{modalChord.chord.fullName}</p>
+              </div>
+              <button
+                onClick={() => setModalChord(null)}
+                className="text-slate-400 hover:text-white text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="bg-slate-900 rounded p-4">
+              <svg viewBox="0 -2 55 67" className="w-full" style={{ height: '300px' }}>
+                {/* Strings (vertical lines) */}
+                {[0, 1, 2, 3, 4, 5].map((string) => (
+                  <line
+                    key={`string-${string}`}
+                    x1={5 + string * 9}
+                    y1={5}
+                    x2={5 + string * 9}
+                    y2={60}
+                    stroke="#64748b"
+                    strokeWidth="0.5"
+                  />
+                ))}
+                
+                {/* Frets (horizontal lines) */}
+                {[0, 1, 2, 3, 4, 5].map((fret) => (
+                  <line
+                    key={`fret-${fret}`}
+                    x1={5}
+                    y1={5 + fret * 11}
+                    x2={50}
+                    y2={5 + fret * 11}
+                    stroke="#64748b"
+                    strokeWidth={fret === 0 ? "2" : "0.5"}
+                  />
+                ))}
+                
+                {/* Finger positions */}
+                {modalChord.position.frets.map((fret, stringIndex) => {
+                  if (fret === -1) {
+                    return (
+                      <text
+                        key={`mute-${stringIndex}`}
+                        x={5 + stringIndex * 9}
+                        y={3}
+                        fontSize="4.5"
+                        fill="#ef4444"
+                        textAnchor="middle"
+                        fontWeight="bold"
+                      >
+                        ×
+                      </text>
+                    );
+                  } else if (fret === 0) {
+                    return (
+                      <circle
+                        key={`open-${stringIndex}`}
+                        cx={5 + stringIndex * 9}
+                        cy={1.5}
+                        r={1.5}
+                        fill="none"
+                        stroke="#10b981"
+                        strokeWidth="0.8"
+                      />
+                    );
+                  } else {
+                    const displayFret = fret - modalChord.position.baseFret;
+                    const adjustedFret = modalChord.position.baseFret > 0 ? displayFret + 1 : displayFret;
+                    return (
+                      <g key={`fret-${stringIndex}`}>
+                        <circle
+                          cx={5 + stringIndex * 9}
+                          cy={5 + adjustedFret * 11 - 5.5}
+                          r={3}
+                          fill="#fbbf24"
+                        />
+                        <text
+                          x={5 + stringIndex * 9}
+                          y={5 + adjustedFret * 11 - 4.5}
+                          fontSize="5"
+                          fill="#000"
+                          textAnchor="middle"
+                          fontWeight="bold"
+                        >
+                          {modalChord.position.fingers[stringIndex]}
+                        </text>
+                      </g>
+                    );
+                  }
+                })}
+                
+                {/* Base fret indicator if not at nut */}
+                {modalChord.position.baseFret > 0 && (
+                  <text
+                    x={1}
+                    y={11}
+                    fontSize="5"
+                    fill="#94a3b8"
+                    fontWeight="bold"
+                  >
+                    {modalChord.position.baseFret}
+                  </text>
+                )}
+              </svg>
+            </div>
+            
+            <button
+              onClick={() => setModalChord(null)}
+              className="mt-4 w-full bg-slate-700 hover:bg-slate-600 text-white py-2 rounded transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
