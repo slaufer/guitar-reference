@@ -588,7 +588,7 @@ const GuitarFretboard = () => {
                 </div>
 
                 {/* Frets */}
-                <div className="flex flex-1 border-t-2 border-slate-600 relative">
+                <div className={`flex flex-1 border-t-2 border-slate-600 relative ${stringIndex === 5 ? 'border-b-2' : ''}`}>
                   {Array.from({ length: numFrets + 1 }, (_, fret) => {
                     const midi = openStringMIDI[5 - stringIndex] + fret;
                     const noteName = midiToNoteName(midi);
