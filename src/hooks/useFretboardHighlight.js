@@ -17,6 +17,8 @@ export const useFretboardHighlight = (hoveredChord, selectedChord, selectedScale
 
     // Check all selected scales with transposition and repeating cycle
     if (selectedScale.length > 0) {
+      const matchingPatterns = [];
+
       for (const position of selectedScale) {
         const pattern = pentatonicPatterns[position];
         const stringFrets = pattern[5 - stringIndex];
@@ -26,9 +28,19 @@ export const useFretboardHighlight = (hoveredChord, selectedChord, selectedScale
           // The pattern repeats every 12 frets (one octave)
           // Check if (fret - transpose - patternFret) is divisible by 12
           if ((fret - scaleTranspose - patternFret) % 12 === 0) {
-            return { highlighted: true, type: 'scale' };
+            matchingPatterns.push(position);
+            break; // No need to check other frets for this pattern
           }
         }
+      }
+
+      // Return all matching patterns
+      if (matchingPatterns.length > 0) {
+        return {
+          highlighted: true,
+          type: 'scale',
+          patterns: matchingPatterns
+        };
       }
     }
 

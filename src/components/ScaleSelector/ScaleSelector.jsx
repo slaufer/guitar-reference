@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { PENTATONIC_COLORS } from '../../utils/scaleColors';
 
 const ScaleSelector = ({ selectedScale, scaleTranspose, onScaleSelect, onScaleTranspose, onScaleReset, scaleRootNote, relativeMajorNote, onClearChord }) => {
   const handlePositionClick = (position) => {
@@ -58,10 +59,13 @@ const ScaleSelector = ({ selectedScale, scaleTranspose, onScaleSelect, onScaleTr
               <button
                 key={position}
                 onClick={() => handlePositionClick(position)}
+                style={selectedScale.includes(position) ? {
+                  backgroundColor: PENTATONIC_COLORS[position].hex
+                } : {}}
                 className={`
                   px-3 py-1 rounded text-sm font-semibold transition-all
                   ${selectedScale.includes(position)
-                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
+                    ? `text-white shadow-lg ${PENTATONIC_COLORS[position].shadow}`
                     : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                   }
                 `}
