@@ -18,7 +18,8 @@ const FretboardNote = ({ stringIndex, fret, noteName, isPlaying, highlight, onPl
     } else {
       // Multiple patterns: use gradient
       return {
-        background: generateGradient(patterns)
+        background: generateGradient(patterns),
+        backgroundClip: 'padding-box'
       };
     }
   };
