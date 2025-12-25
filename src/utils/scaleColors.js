@@ -60,7 +60,7 @@ export const generateGradient = (patterns) => {
     orderedPatterns = sorted;
   }
 
-  const colors = orderedPatterns.map(p => PENTATONIC_COLORS[p].hex).reverse();
+  const colors = orderedPatterns.map(p => PENTATONIC_COLORS[p].hex);
 
   // Create equal-width color bands with hard edges
   const bandWidth = 100 / colors.length;
