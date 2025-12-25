@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const ScaleSelector = ({ selectedScale, scaleTranspose, onScaleSelect, onScaleTranspose, onScaleReset, scaleRootNote, onClearChord }) => {
+const ScaleSelector = ({ selectedScale, scaleTranspose, onScaleSelect, onScaleTranspose, onScaleReset, scaleRootNote, relativeMajorNote, onClearChord }) => {
   const handlePositionClick = (position) => {
     if (selectedScale.includes(position)) {
       // Remove from array
@@ -16,7 +16,9 @@ const ScaleSelector = ({ selectedScale, scaleTranspose, onScaleSelect, onScaleTr
   return (
     <div className="mt-6 bg-slate-800/50 rounded-lg p-4 backdrop-blur">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-white">{scaleRootNote} Minor Pentatonic Scale</h3>
+        <h3 className="text-lg font-semibold text-white">
+          {scaleRootNote} Minor Pentatonic / {relativeMajorNote} Major Pentatonic
+        </h3>
         <div className="flex items-center gap-3">
           {/* Reset transpose button */}
           <button

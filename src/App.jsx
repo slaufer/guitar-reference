@@ -4,7 +4,7 @@ import ScaleSelector from './components/ScaleSelector/ScaleSelector';
 import ChordLibrary from './components/ChordLibrary/ChordLibrary';
 import ChordModal from './components/ChordLibrary/ChordModal';
 import { useAudioSynthesis } from './hooks/useAudioSynthesis';
-import { getScaleRootNote } from './utils/musicTheory';
+import { getScaleRootNote, getRelativeMajorNote } from './utils/musicTheory';
 import { noteNames } from './utils/constants';
 
 const App = () => {
@@ -49,6 +49,7 @@ const App = () => {
           onScaleTranspose={setScaleTranspose}
           onScaleReset={() => setScaleTranspose(0)}
           scaleRootNote={getScaleRootNote(scaleTranspose)}
+          relativeMajorNote={getRelativeMajorNote(scaleTranspose)}
           onClearChord={() => setSelectedChord(null)}
         />
 

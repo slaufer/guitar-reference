@@ -8,6 +8,14 @@ export const getScaleRootNote = (scaleTranspose) => {
   return noteNames[currentIndex];
 };
 
+// Calculate relative major root note (3 semitones above minor)
+export const getRelativeMajorNote = (scaleTranspose) => {
+  // E is at index 4, relative major is G (index 7), which is 3 semitones up
+  const eIndex = 4;
+  const currentIndex = (eIndex + scaleTranspose + 3 + 12) % 12; // +3 for relative major, +12 to handle negative numbers
+  return noteNames[currentIndex];
+};
+
 // Convert MIDI note to note name with octave
 export const midiToNoteName = (midi) => {
   const octave = Math.floor(midi / 12) - 1;
