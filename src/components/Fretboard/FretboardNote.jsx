@@ -49,7 +49,7 @@ const FretboardNote = ({ stringIndex, fret, noteName, isPlaying, highlight, onPl
           ${isPlaying
             ? 'bg-blue-500 text-white scale-110 shadow-lg shadow-blue-500/50'
             : highlight.highlighted && highlight.type === 'chord'
-            ? 'bg-amber-500 text-white shadow-md shadow-amber-500/30'
+            ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30'
             : isScaleNote
             ? `text-white shadow-md ${getScaleShadowClass()}`
             : 'bg-slate-700 text-slate-200 hover:bg-slate-600 hover:scale-105 hover:shadow-md'

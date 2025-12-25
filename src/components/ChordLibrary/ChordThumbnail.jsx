@@ -27,7 +27,7 @@ const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, onOpen
       className={`
         bg-slate-700/50 rounded-lg p-3 border-2 transition-all cursor-pointer
         flex-shrink-0 flex-grow-0
-        ${isSelected ? 'border-amber-500 shadow-lg shadow-amber-500/20' : 'border-slate-600 hover:border-slate-500'}
+        ${isSelected ? 'border-emerald-500 shadow-lg shadow-emerald-500/20' : 'border-slate-600 hover:border-slate-500'}
       `}
       style={{ flexBasis: '140px' }}
       onMouseEnter={() => onHover({ chord, position, positionIndex: selectedPosition })}
@@ -70,7 +70,7 @@ const ChordThumbnail = ({ chord, onHover, onLeave, onSelect, onPlayChord, onOpen
               className={`
                 px-2 py-1 rounded text-xs font-semibold transition-colors
                 ${selectedPosition === index
-                  ? 'bg-amber-500 text-white'
+                  ? 'bg-emerald-500 text-white'
                   : 'bg-slate-600 text-slate-300 hover:bg-slate-500'
                 }
               `}
