@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Info } from 'lucide-react';
 import Fretboard from './components/Fretboard/Fretboard';
 import ScaleSelector from './components/ScaleSelector/ScaleSelector';
 import ChordLibrary from './components/ChordLibrary/ChordLibrary';
 import ChordModal from './components/ChordLibrary/ChordModal';
+import InfoModal from './components/InfoModal';
 import { useAudioSynthesis } from './hooks/useAudioSynthesis';
 import { getScaleRootNote, getRelativeMajorNote } from './utils/musicTheory';
 import { noteNames } from './utils/constants';
@@ -13,6 +15,7 @@ const App = () => {
   const [selectedScale, setSelectedScale] = useState([]);
   const [scaleTranspose, setScaleTranspose] = useState(0);
   const [modalChord, setModalChord] = useState(null);
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
 
   const { playChord } = useAudioSynthesis();
 
@@ -32,7 +35,16 @@ const App = () => {
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Guitar Fretboard Reference</h1>
+          <div className="flex items-center justify-center gap-3">
+            <h1 className="text-4xl font-bold text-white mb-2">Guitar Fretboard Reference</h1>
+            <button
+              onClick={() => setInfoModalOpen(true)}
+              className="text-slate-400 hover:text-white transition-colors mb-2"
+              title="How to use this app"
+            >
+              <Info className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
         <Fretboard
@@ -64,6 +76,7 @@ const App = () => {
       </div>
 
       <ChordModal modalChord={modalChord} onClose={() => setModalChord(null)} />
+      <InfoModal isOpen={infoModalOpen} onClose={() => setInfoModalOpen(false)} />
     </div>
   );
 };

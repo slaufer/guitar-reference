@@ -25,10 +25,10 @@ export const PENTATONIC_COLORS = {
     name: 'cyan'
   },
   5: {
-    bg: 'bg-pink-500',
-    shadow: 'shadow-pink-500/30',
-    hex: '#EC4899',
-    name: 'pink'
+    bg: 'bg-lime-500',
+    shadow: 'shadow-lime-500/30',
+    hex: '#84CC16',
+    name: 'lime'
   }
 };
 
